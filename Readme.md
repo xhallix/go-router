@@ -10,7 +10,19 @@ func main() {
     
 	r := router.Router{}
 
-	// setup routes
+	// declare all routes
+	appRoutes := []string{
+		"/",
+		"/homepage",
+		"/about",
+	}
+
+	// set the routes
+	r.SetRoutes(appRoutes)
+
+	r.SetNotFoundTemplate("views/templates/errors/notfound.html")
+
+	// set actions for routes
 	r.GET("/foo", func(writer http.ResponseWriter, r *http.Request) {
 		t, _ := template.ParseFiles("views/templates/index.html")
 		pageData := struct {
@@ -21,6 +33,7 @@ func main() {
 		t.Execute(writer, pageData)
 	})
 
+	// use the route as a handler
 	http.ListenAndServe(":8000", http.HandlerFunc(r.RouteHandler))
 }
 
