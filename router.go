@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -31,7 +30,6 @@ func (r *Router) GET(path string, handler HTTPHandler) {
 	}
 	http.HandleFunc(path, func(writer http.ResponseWriter, req *http.Request) {
 		handler(writer, req)
-		fmt.Print("TTEST")
 	})
 
 }
