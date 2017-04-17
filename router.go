@@ -2,6 +2,7 @@ package router
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -46,6 +47,18 @@ type NotFoundResponseWriter struct {
 
 // HTTPHandler Handles http requests
 type HTTPHandler func(http.ResponseWriter, *http.Request)
+
+// Redirect redirect to https
+// thanks @https://gist.github.com/d-schmidt/587ceec34ce1334a5e60
+func (r *Router) Redirect(w http.ResponseWriter, req *http.Request) {
+	// remove/add not default ports from req.Host
+	target := "https://" + req.Host + req.URL.Path
+	if len(req.URL.RawQuery) > 0 {
+		target += "?" + req.URL.RawQuery
+	}
+	log.Printf("redirect to: %s", target)
+	http.Redirect(w, req, target, http.StatusTemporaryRedirect)
+}
 
 // RouteHandler Used in listen and serve to catch all requests
 func (r *Router) RouteHandler(writer http.ResponseWriter, req *http.Request) {
